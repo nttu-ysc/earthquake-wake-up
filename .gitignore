@@ -1,0 +1,4 @@
+configs/config.yaml
+.idea
+earthquake-wake-up
+*.log

@@ -1,0 +1,12 @@
+app:
+  timeout: 10
+
+notify_groups:
+  - line
+  - file
+
+line:
+  token:
+
+file:
+  path:
