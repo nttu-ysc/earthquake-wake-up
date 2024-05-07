@@ -21,7 +21,9 @@ var notifiers = map[string]func(ctx context.Context, c *configs.Config) notify.N
 func main() {
 	c := getConfig()
 	ctx := context.Background()
-	context.WithTimeoutCause(ctx, time.Duration(c.AppTimeout)*time.Second, nil)
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(c.AppTimeout)*time.Second)
+	defer cancel()
+
 	notifyManager := prepareNotificationManager(ctx, c)
 
 	// parse args
