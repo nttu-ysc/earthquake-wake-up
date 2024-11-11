@@ -4,9 +4,13 @@ app:
 notify_groups:
   - line
   - file
+  - discord
 
 line:
   token:
 
 file:
   path:
+
+discord:
+  webhook:

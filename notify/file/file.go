@@ -2,10 +2,12 @@ package file
 
 import (
 	"context"
-	"github.com/nttu-ysc/earthquake-wake-up/configs"
-	"github.com/nttu-ysc/earthquake-wake-up/notify"
+	"fmt"
 	"log"
 	"os"
+
+	"github.com/nttu-ysc/earthquake-wake-up/configs"
+	"github.com/nttu-ysc/earthquake-wake-up/notify"
 )
 
 var _ notify.Notifier = (*file)(nil)
@@ -22,7 +24,8 @@ func NewFile(ctx context.Context, c *configs.Config) notify.Notifier {
 	}
 }
 
-func (f *file) Notify(message string) {
+func (f *file) Notify(intensity string, timeLeft string) {
+	message := fmt.Sprintf(notify.DefaultNotifyMsg, intensity, timeLeft)
 	var file *os.File
 	if _, err := os.Stat(f.path); err != nil && os.IsNotExist(err) {
 		file, _ = os.Create(f.path)

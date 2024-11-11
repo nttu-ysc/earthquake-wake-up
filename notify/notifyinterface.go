@@ -1,5 +1,5 @@
 package notify
 
 type Notifier interface {
-	Notify(message string)
+	Notify(intensity string, timeLeft string)
 }

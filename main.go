@@ -3,19 +3,22 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/nttu-ysc/earthquake-wake-up/configs"
-	"github.com/nttu-ysc/earthquake-wake-up/notify"
-	"github.com/nttu-ysc/earthquake-wake-up/notify/file"
-	"github.com/nttu-ysc/earthquake-wake-up/notify/line"
-	"github.com/spf13/viper"
 	"log"
 	"os"
 	"time"
+
+	"github.com/nttu-ysc/earthquake-wake-up/configs"
+	"github.com/nttu-ysc/earthquake-wake-up/notify"
+	"github.com/nttu-ysc/earthquake-wake-up/notify/discord"
+	"github.com/nttu-ysc/earthquake-wake-up/notify/file"
+	"github.com/nttu-ysc/earthquake-wake-up/notify/line"
+	"github.com/spf13/viper"
 )
 
 var notifiers = map[string]func(ctx context.Context, c *configs.Config) notify.Notifier{
-	"line": line.NewLine,
-	"file": file.NewFile,
+	"line":    line.NewLine,
+	"file":    file.NewFile,
+	"discord": discord.NewDiscord,
 }
 
 func main() {
@@ -27,8 +30,7 @@ func main() {
 	notifyManager := prepareNotificationManager(ctx, c)
 
 	// parse args
-	msg := fmt.Sprintf("地震震度: %s\n預計到達時間: %ss", os.Args[1], os.Args[2])
-	notifyManager.Notify(msg)
+	notifyManager.Notify(os.Args[1], os.Args[2])
 }
 
 func prepareNotificationManager(ctx context.Context, c *configs.Config) *notify.NotificationManager {
@@ -53,7 +55,7 @@ func getConfig() *configs.Config {
 	}
 	c := &configs.Config{}
 	if err := viper.Unmarshal(c); err != nil {
-		panic(fmt.Sprintf("unable to decode into config struct, %v", err))
+		panic(fmt.Errorf("unable to decode into config struct, %v", err))
 	}
 	return c
 }

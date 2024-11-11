@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/nttu-ysc/earthquake-wake-up/configs"
-	"github.com/nttu-ysc/earthquake-wake-up/notify"
 	"io"
 	"net/http"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/nttu-ysc/earthquake-wake-up/configs"
+	"github.com/nttu-ysc/earthquake-wake-up/notify"
 )
 
 var _ notify.Notifier = (*line)(nil)
@@ -29,7 +30,8 @@ func NewLine(ctx context.Context, c *configs.Config) notify.Notifier {
 	}
 }
 
-func (l *line) Notify(message string) {
+func (l *line) Notify(intensity string, timeLeft string) {
+	message := fmt.Sprintf(notify.DefaultNotifyMsg, intensity, timeLeft)
 	wg := new(sync.WaitGroup)
 	for _, token := range strings.Split(l.tokens, ",") {
 		wg.Add(1)
